@@ -1,0 +1,7 @@
+__pycache__/
+*.py[cod]
+.venv/
+.env
+.pdf2zh-*/
+translated/
+demo/check-output/

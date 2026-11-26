@@ -1,0 +1,4 @@
+interface:
+  display_name: "PDF 中英对照翻译"
+  short_description: "固定调用 PDF2zh-Next 翻译英文论文，输出左英右中对照 PDF"
+  default_prompt: "用 $pdf2zh-bilingual 把这些英文论文全文翻译成中英对照 PDF。"
