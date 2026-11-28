@@ -8,7 +8,9 @@ import argparse
 import asyncio
 import logging
 import os
+import platform
 import tempfile
+from importlib.metadata import version
 from pathlib import Path
 
 import pymupdf
@@ -76,9 +78,19 @@ async def translate_one(source, destination, dimensions):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("pdfs", metavar="PDF", nargs="+", type=Path)
+    parser.add_argument("pdfs", metavar="PDF", nargs="*", type=Path)
     parser.add_argument("-o", "--output-dir", metavar="DIR", type=Path)
+    parser.add_argument("--check-toolchain", action="store_true", help="检查运行环境和依赖版本")
     args = parser.parse_args()
+    if args.check_toolchain:
+        if args.pdfs or args.output_dir:
+            parser.error("--check-toolchain 请单独运行")
+        dependencies = ("pdf2zh-next", "babeldoc", "pymupdf", "bitstring")
+        versions = ", ".join(f"{name} {version(name)}" for name in dependencies)
+        print(f"工具链可用：Python {platform.python_version()}, {versions}")
+        return 0
+    if not args.pdfs:
+        parser.error("请提供至少一个 PDF 文件，或使用 --check-toolchain 检查工具链")
     logging.basicConfig(level=logging.WARNING, format="%(levelname)s %(message)s")
     jobs = []
     destinations = set()
